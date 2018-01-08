@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="container container-fluid">
+    <div class="jumbotron home">
+        <img src='@Url.Content("~/Content/Images/logo_small.png")' style="background: transparent; width: 40%; height: 40%;" />
+        <p class="lead">PNBank is a free online platform. <br />You can withdrawal, deposit and send <br />money with one click</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 ">
+        <a href="@Url.Action("Withdrawal", "Transaction", new { checkingAccountId = ViewBag.CheckingAccountId })" class="btn btn-primary btn-lg btn-block  margin-top-10"><span class="glyphicon glyphicon-circle-arrow-down"></span> Withdrawal</a>
+        <a href="@Url.Action("Details", "CheckingAccount", new { id = ViewBag.CheckingAccountId })" class="btn btn-primary btn-lg btn-block margin-top-10"><span class="glyphicon glyphicon-question-sign" ></span> Account Details</a>
+    </div>
+    <div class="col-md-6 ">
+        <a href="@Url.Action("Statement", "CheckingAccount", new { id = ViewBag.CheckingAccountId })" class="btn btn-primary btn-lg btn-block margin-top-10"><span class="glyphicon glyphicon-print"></span> Transactions</a>
+        <a href="@Url.Action("Transfer", "Transaction", new { checkingAccountId = ViewBag.CheckingAccountId })" class="btn btn-primary btn-lg btn-block margin-top-10"><span class="glyphicon glyphicon-transfer"></span> Send Funds</a>
+    </div>
+    <div class="col-md-offset-3 col-md-6 ">
+        <a href="@Url.Action("Deposit", "Transaction", new {checkingAccountId = ViewBag.CheckingAccountId})" class="btn btn-primary btn-lg btn-block margin-top-10"><span class="glyphicon glyphicon-circle-arrow-up"></span> Deposit</a>
+
+    </div>
+</div>

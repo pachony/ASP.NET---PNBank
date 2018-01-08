@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "Contact us";
+}
+<h2>@ViewBag.Title.</h2>
+<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<address>
+    <strong>Support:</strong>   <a href="mailto:Support@example.com">support@pnbank.com</a><br />
+    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">marketing@pnbank.com</a>
+</address>
+<address>
+    PNBank<br />
+    ul Ivan Denkoglu 12-14, Sofia<br />
+    <abbr title="Phone"></abbr>
+    +359 878 230 701
+</address>
+
+
+<div class="row">
+    <div class="col-md-7">
+        <div id="map" style="width:650px;height:400px;background:yellow"></div>
+    </div>
+
+    <div class="col-md-5" id="formSection">
+        <h3>@ViewBag.TheMessage</h3>
+        <form method="post" id="contactForm">
+            <div class="form-group">
+                <input type="text" class="form-control" name="" value="" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" data-bind="value:message, valueUpdate:'input'" name="message" id="message" maxlength="150"></textarea>
+            </div>
+            <button class="btn btn-default" type="submit" name="button">
+                <i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit
+            </button>
+            <span data-bind="text:charactersRemaining"></span> characters remaining
+            <img style="display:none;" id="progress" src="~/Content/images/progress.gif" />
+        </form>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+
+        function initMap() {
+
+            var location = new google.maps.LatLng(42.694188, 23.318201);
+
+            var mapCanvas = document.getElementById('map');
+            var mapOptions = {
+                center: location,
+                zoom: 16,
+                panControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+
+            var markerImage = '../Content/images/marker.png';
+
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                icon: markerImage
+            });
+
+            var contentString = '<div class="info-window">' +
+                '<h3>Info Window Content</h3>' +
+                '<div class="info-content">' +
+                '<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>' +
+                '</div>' +
+                '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 400
+            });
+
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
+            });
+
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+    <script>
+        function myMap() {
+            var mapCanvas = document.getElementById("map");
+            var mapOptions = {
+                center: new google.maps.LatLng(51.5, -0.2),
+                zoom: 10
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaSSWVKgl4a4FUWvZpWQsY5jDE79xz1E4&callback=initMap"></script>
+
+    <script src="~/Scripts/knockout-3.4.2.js"></script>
+    <script>
+        function ContactViewModel() {
+            var self = this;
+            self.message = ko.observable('');
+            self.charactersRemaining = ko.computed(function () { return 150 - self.message().length; })
+        }
+
+        ko.applyBindings(new ContactViewModel());
+    </script>
+    <script>
+        $('#contactForm').submit(function () {
+            $('#progress').show();
+            $.post('', { message: $('#message').val() })
+                .done(function (response) {
+                    setTimeout(function () { $('#formSection').html(response); }, 2000);
+                });
+            return false;
+        });
+    </script>
+}
+
+
+@* 07_01: Partial page updates using Microsoft jQuery Unobtrusive Ajax
+    <div id="formSection">
+        <h3>@ViewBag.TheMessage</h3>
+        @using (Ajax.BeginForm(new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "formSection" }))
+        {
+            <textarea id="message" name="message"></textarea>
+            <input type="Submit" value="Send" />
+        }
+    </div>
+
+    @section scripts {
+        <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    }
+*@
